@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
-  <name>sick</name>
+  <name>caddy_ai2_ros2_control_sensors_SICK_LMS291</name>
   <version>1.0.0</version>
   <description>
-    SICK LiDAR sensor nodes
+    SICK LiDAR sensor nodes #TODO
   </description>
   <maintainer email="racarla96@gmail.com">Tony</maintainer>
   <license>Apache License 2.0</license>

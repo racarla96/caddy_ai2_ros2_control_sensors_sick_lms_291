@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="sick_lms_291">
+
+  <!-- argumentos -->
+  <xacro:arg name="prefix" default=""/>
+  <xacro:arg name="use_sim" default="false"/>
+  <xacro:arg name="use_gazebo" default="false"/>
+  <xacro:arg name="use_ros2_control" default="false"/>
+
+  <!-- link físico del sensor -->
+  <link name="${prefix}lidar_sick_lms_291_base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://caddy_ai2_ros2_control_sensors_SICK_LMS291/meshes/dae/SICK_LMS291-S05.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://caddy_ai2_ros2_control_sensors_SICK_LMS291/meshes/stl/SICK_LMS291-S05.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="1.5"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.01" iyy="0.01" izz="0.01" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <!-- frame del haz del láser -->
+  <link name="${prefix}lidar_sick_lms_291_ray_link"/>
+
+  <!-- Joint entre el cuerpo y el frame del haz -->
+  <joint name="${prefix}lidar_sick_lms_291_joint" type="fixed">
+    <parent link="${prefix}lidar_sick_lms_291_base_link"/>
+    <child link="${prefix}lidar_sick_lms_291_ray_link"/>
+    <!-- Ajusta el origen según la posición real del emisor -->
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  </joint>
+
+</robot>

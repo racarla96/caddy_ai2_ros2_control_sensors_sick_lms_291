@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-
-project(sick)
+project(caddy_ai2_ros2_control_sensors_SICK_LMS291)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
