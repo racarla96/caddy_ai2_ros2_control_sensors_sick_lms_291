@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="lidar_sick_lms_291" params="parent *origin">
+
+  <joint name="base_joint" type="fixed">
+    <xacro:insert_block name="origin" />
+    <parent link="${parent}"/>
+    <child link="base_link" />
+  </joint>
+
+    <!-- link físico del sensor -->
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <mesh filename="$(find caddy_ai2_ros2_control_sensors_lidar_sick_lms_291)/meshes/dae/SICK_LMS291-S05.dae" scale="1 1 1"/>
+        </geometry>
+      </visual>
+      <inertial>
+        <mass value="4.5"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="0.01" iyy="0.01" izz="0.01" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+
+    <!-- frame del haz del láser -->
+    <link name="ray_link"/>
+
+    <!-- Joint entre el cuerpo y el frame del haz -->
+    <joint name="ray_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="ray_link"/>
+      <origin xyz="0 0 0.1" rpy="0 0 1.5708"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>

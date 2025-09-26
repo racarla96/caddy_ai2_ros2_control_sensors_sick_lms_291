@@ -52,7 +52,7 @@ En este repositorio ya se incluye una versión **parchada para Ubuntu 22.04 LTS*
 ### Pasos de instalación:
 
 ```bash
-cd docs_official/code/sicktoolbox-1.0.1-patch/
+cd doc/code/sicktoolbox-1.0.1-patch/
 ./configure
 find . -type f -name Makefile -exec sed -i.bak 's/CXXFLAGS = -g -O2/CXXFLAGS = -g -O2 -std=c++11 -w/g' {} +
 make

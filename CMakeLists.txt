@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(caddy_ai2_ros2_control_sensors_SICK_LMS291)
+project(caddy_ai2_ros2_control_sensors_lidar_sick_lms_291)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -28,10 +28,10 @@ if(NOT SICKLMS_LIB)
 endif()
 
 include_directories(
-  ${PROJECT_SOURCE_DIR}/src
+  ${PROJECT_SOURCE_DIR}/code/src
 )
 
-add_executable(sick_node src/sick_node.cpp)
+add_executable(sick_node code/src/sick_node.cpp)
 ament_target_dependencies(sick_node
   "rclcpp"
   "sensor_msgs"
@@ -40,7 +40,7 @@ ament_target_dependencies(sick_node
 )
 target_link_libraries(sick_node ${SICKLMS_LIB})
 
-add_executable(sick_client src/sick_client.cpp)
+add_executable(sick_client code/src/sick_client.cpp)
 ament_target_dependencies(sick_client
   "rclcpp"
   "sensor_msgs"
@@ -52,7 +52,7 @@ install(TARGETS
   sick_node sick_client
   DESTINATION lib/${PROJECT_NAME})
 
-install(DIRECTORY launch params startup rviz2
+install(DIRECTORY bringup description meshes tools
   DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)

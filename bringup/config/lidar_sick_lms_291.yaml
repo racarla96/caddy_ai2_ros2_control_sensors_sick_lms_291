@@ -1,4 +1,4 @@
-sick_lms_291_node:
+sick_lms_291_parameters:
   ros__parameters:
     port: /dev/ttyUSB0
     frame_id: lidar_sick_lms_291_frame

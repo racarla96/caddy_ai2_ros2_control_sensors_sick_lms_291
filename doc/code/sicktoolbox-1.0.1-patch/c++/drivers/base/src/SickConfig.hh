@@ -14,7 +14,7 @@
 #define HAVE_GETTIMEOFDAY 1
 
 /* Define if you have gnuplot */
-#define HAVE_GNUPLOT 1
+/* #undef HAVE_GNUPLOT */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1

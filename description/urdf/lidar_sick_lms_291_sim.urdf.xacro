@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="sick_lms_291_sim">
+
+  <!-- argumentos -->
+  <xacro:arg name="use_sim_gazebo" default="false"/>
+
+  <!-- Incluir el archivo base del sensor -->
+  <xacro:include filename="$(find caddy_ai2_ros2_control_sensors_lidar_sick_lms_291)/description/urdf/lidar_sick_lms_291.urdf.xacro" />
+
+  <!-- Crear un link base para el mundo -->
+  <link name="world"/>
+
+  <!-- Instanciar el sensor en el mundo -->
+  <xacro:lidar_sick_lms_291 parent="world">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:lidar_sick_lms_291>
+
+  <!-- incluir gazebo sólo si se activa el flag -->
+  <xacro:if value="$(arg use_sim_gazebo)">
+    <xacro:include filename="$(find caddy_ai2_ros2_control_sensors_lidar_sick_lms_291)/description/gazebo/lidar_sick_lms_291.gazebo.xacro"/>
+    <xacro:lidar_sick_lms_291_gazebo/>
+  </xacro:if>
+
+</robot>

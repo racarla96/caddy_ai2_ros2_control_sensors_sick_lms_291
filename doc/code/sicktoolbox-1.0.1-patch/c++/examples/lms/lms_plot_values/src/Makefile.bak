@@ -32,7 +32,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = x86_64-unknown-linux-gnu
 host_triplet = x86_64-unknown-linux-gnu
-noinst_PROGRAMS = lms_plot_values$(EXEEXT)
+#noinst_PROGRAMS = lms_plot_values$(EXEEXT)
 subdir = c++/examples/lms/lms_plot_values/src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -49,12 +49,12 @@ CONFIG_HEADER = $(top_builddir)/c++/drivers/base/src/SickConfig.hh
 CONFIG_CLEAN_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
 am__lms_plot_values_SOURCES_DIST = main.cc gnuplot_i.cc gnuplot_i.hpp
-am_lms_plot_values_OBJECTS = main.$(OBJEXT) \
-	gnuplot_i.$(OBJEXT)
+#am_lms_plot_values_OBJECTS = main.$(OBJEXT) \
+#	gnuplot_i.$(OBJEXT)
 lms_plot_values_OBJECTS = $(am_lms_plot_values_OBJECTS)
 am__DEPENDENCIES_1 =
-lms_plot_values_DEPENDENCIES =  \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+#lms_plot_values_DEPENDENCIES =  \
+#	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 lms_plot_values_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(lms_plot_values_LDFLAGS) $(LDFLAGS) -o $@
@@ -84,13 +84,13 @@ DIST_SOURCES = $(am__lms_plot_values_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch/misc/missing --run aclocal-1.10
-AMTAR = ${SHELL} /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch/misc/missing --run tar
+ACLOCAL = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run aclocal-1.10
+AMTAR = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run tar
 AR = ar
-AUTOCONF = ${SHELL} /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch/misc/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch/misc/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch/misc/missing --run automake-1.10
-AWK = mawk
+AUTOCONF = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run automake-1.10
+AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
@@ -147,7 +147,7 @@ LIBS =
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch/misc/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run makeinfo
 MKDIR_P = /usr/bin/mkdir -p
 OBJEXT = o
 PACKAGE = sicktoolbox
@@ -167,10 +167,10 @@ SICK_LD_SRC_DIR = sickld-1.0
 SICK_LMS_SRC_DIR = sicklms-1.0
 STRIP = strip
 VERSION = 1.0.1
-abs_builddir = /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch/c++/examples/lms/lms_plot_values/src
-abs_srcdir = /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch/c++/examples/lms/lms_plot_values/src
-abs_top_builddir = /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch
-abs_top_srcdir = /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch
+abs_builddir = /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/c++/examples/lms/lms_plot_values/src
+abs_srcdir = /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/c++/examples/lms/lms_plot_values/src
+abs_top_builddir = /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch
+abs_top_srcdir = /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch
 ac_ct_CC = gcc
 ac_ct_CXX = g++
 ac_ct_F77 = f77
@@ -192,7 +192,7 @@ datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-have_gnuplot = yes
+have_gnuplot = no
 host = x86_64-unknown-linux-gnu
 host_alias = 
 host_cpu = x86_64
@@ -201,7 +201,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = $(SHELL) /home/scbr-cm/Documentos/ws_test_sick/src/caddy_ai2_sensors_SICK_LMS291-S05/docs_official/code/sicktoolbox-1.0.1-patch/misc/install-sh
+install_sh = $(SHELL) /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -220,10 +220,10 @@ sysconfdir = ${prefix}/etc
 target_alias = 
 top_builddir = ../../../../..
 top_srcdir = ../../../../..
-lms_plot_values_SOURCES = main.cc gnuplot_i.cc gnuplot_i.hpp
-lms_plot_values_LDADD = -lsicklms-1.0 $(PTHREAD_CFLAGS) $(PTHREAD_LIBS)
-lms_plot_values_LDFLAGS = -L$(top_srcdir)/c++/drivers/lms/$(SICK_LMS_SRC_DIR)
-AM_CPPFLAGS = -I$(top_srcdir)/c++/drivers/lms -I$(top_srcdir)/c++/drivers/base/src $(PTHREAD_CFLAGS) $(PTHREAD_LIBS) $(all_includes)
+#lms_plot_values_SOURCES = main.cc gnuplot_i.cc gnuplot_i.hpp
+#lms_plot_values_LDADD = -lsicklms-1.0 $(PTHREAD_CFLAGS) $(PTHREAD_LIBS)
+#lms_plot_values_LDFLAGS = -L$(top_srcdir)/c++/drivers/lms/$(SICK_LMS_SRC_DIR)
+#AM_CPPFLAGS = -I$(top_srcdir)/c++/drivers/lms -I$(top_srcdir)/c++/drivers/base/src $(PTHREAD_CFLAGS) $(PTHREAD_LIBS) $(all_includes)
 all: all-am
 
 .SUFFIXES:
