@@ -111,7 +111,7 @@ def generate_launch_description():
     # Lanzar RViz (opcional)
     rviz_config_file = PathJoinSubstitution(
         [FindPackageShare("caddy_ai2_ros2_control_sensors_lidar_sick_lms_291"),
-        "tools", "rviz", "lidar_sick_lms_291.rviz"]
+        "description", "rviz", "lidar_sick_lms_291.rviz"]
     )
     rviz_node = Node(
         package="rviz2",
