@@ -1,5 +1,16 @@
 # SICK LMS291-S05 ROS 2 Driver
 
+## TODOs
+- [ ] Revisar y adecuar la documentación.
+- [ ] Calcular la altura del haz respecto a su base para ajustar el urdf.
+- [ ] Ajustar la masa y el momento de inercia.
+- [ ] Volver a testear con el hardware real y el rviz, será necesario hacer el urdf para el hardware real.
+- [ ] Sería genial poder coger directamente los valores .yaml para la simulación sin tener que tenerlo duplicados en el archivo de gazebo.
+- [ ] Obtener los valores de ruido gaussiano para hacer más realista la simulación según -> http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_lidar
+
+NOTA: De momento, no hay soporte para LIDARs en el paquete ROS2 Control.
+
+
 Este repositorio contiene el código fuente, documentación, CADs y drivers necesarios para integrar y utilizar el sensor **SICK LMS291-S05** en un entorno **ROS 2**. El objetivo principal es disponer de un **driver estable y funcional** en ROS 2, basado en **SickToolbox** y adaptado para versiones modernas de Linux y ROS.
 
 🔑 **Resumen del contenido:**
