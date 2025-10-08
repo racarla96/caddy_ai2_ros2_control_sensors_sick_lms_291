@@ -3,27 +3,33 @@
 
 <!-- http://sdformat.org/spec?ver=1.8&elem=sensor#sensor_lidar -->
 
-  <xacro:macro name="lidar_sick_lms_291_gazebo">
+  <xacro:macro name="lidar_sick_lms_291_gazebo" params="samples angle_min angle_max frequency range_min range_max">
 
     <gazebo>
+
+<!--       <physics name="default_physics" type="ode">
+        <max_step_size>0.01</max_step_size>
+        <real_time_update_rate>100</real_time_update_rate>
+      </physics> -->
+
       <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
         <render_engine>ogre2</render_engine>
       </plugin>
-    </gazebo>
+    </gazebo>    
 
     <gazebo reference="ray_link">
       <sensor name="sick_lms_291" type="gpu_lidar">
         <gz_frame_id>ray_link</gz_frame_id> <!-- Ignore Warnings when executing -->
         <topic>/sick_lms_291/scan</topic>
-        <update_rate>10</update_rate>
+        <update_rate>${frequency}</update_rate> <!-- Hz -->
         <visualize>true</visualize>
         <lidar>
           <scan>
             <horizontal>
-              <samples>180</samples> <!-- 180º con 1.0º resolución -->
-              <resolution>1</resolution>
-              <min_angle>-1.5708</min_angle>
-              <max_angle>1.5708</max_angle>
+              <samples>${samples}</samples>
+              <resolution>1</resolution> <!-- ya no hace falta calcular nada -->
+              <min_angle>${angle_min}</min_angle>
+              <max_angle>${angle_max}</max_angle>
             </horizontal>
             <vertical>
               <samples>1</samples>
@@ -33,9 +39,9 @@
             </vertical>
           </scan>
           <range>
-            <min>0.01</min>
-            <max>80.0</max>
-            <resolution>0.01</resolution>
+            <min>${range_min}</min> <!-- meters -->
+            <max>${range_max}</max> <!-- meters -->
+            <resolution>0.01</resolution> <!-- meters -->
           </range>
           <frame_id>/ray_link</frame_id>
         </lidar>

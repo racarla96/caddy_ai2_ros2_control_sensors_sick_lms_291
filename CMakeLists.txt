@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(caddy_ai2_ros2_control_sensors_lidar_sick_lms_291)
+project(caddy_ai2_ros2_sensors_lidar_sick_lms_291)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)

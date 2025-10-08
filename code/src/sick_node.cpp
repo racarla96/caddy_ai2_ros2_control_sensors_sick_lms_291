@@ -11,9 +11,9 @@ class SickNode : public rclcpp::Node {
  * @brief Represents a node that publishes simulated laser scan data.
  */
 private:
-    std::string port = "/dev/ttyUSB0"; /**< The port used for communication. */
+    std::string port = "/dev/sick"; /**< The port used for communication. */
     int baudrate = 38400; /**< The baudrate for communication. */
-    std::string frame_id = "laser_frame"; /**< The frame ID for the laser scan data. */
+    std::string frame_id = "ray_link"; /**< The frame ID for the laser scan data. */
     double resolution = 0.25; /**< The resolution of the laser scan data. */
     bool auto_reconnect = true; /**< Flag indicating whether to automatically reconnect. */
     double angle_max = 90.0; /**< The maximum angle of the laser scan data. */
@@ -87,6 +87,15 @@ public:
         this->declare_parameter("frequency", frequency);
         this->get_parameter("frequency", frequency);
 
+        RCLCPP_INFO(this->get_logger(), "PARAM port: %s", port.c_str());
+
+        RCLCPP_INFO(this->get_logger(), "PARAM baudrate: %d", baudrate);
+
+        RCLCPP_INFO(this->get_logger(), "PARAM resolution: %.2f", resolution);
+
+        RCLCPP_INFO(this->get_logger(), "PARAM frequency: %.2f", frequency);
+
+
         if (frequency < 5) {
             frequency = 5.0;
         }
@@ -112,13 +121,6 @@ public:
             RCLCPP_ERROR(this->get_logger(), "Initialize failed! Are you using the correct device path?");
         }
 
-        /* Initialize the device */
-        try {
-            sick_lms->Initialize(desired_baud);
-        } catch(...) {
-            RCLCPP_ERROR(this->get_logger(), "Initialize failed! Are you using the correct device path?");
-        }
-
         sick_lms_scan_resolution_t res = sick_lms->DoubleToSickScanResolution(resolution);
         if(res == SickLMS::SICK_SCAN_RESOLUTION_UNKNOWN){
             RCLCPP_ERROR(this->get_logger(), "Invalid resolution value! Valid values are: 0.25, 0.5, 1.0");            
@@ -137,7 +139,7 @@ public:
         scan_msg->ranges.resize(size_values);
 
         // Crear el publicador
-        laser_pub_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan", 1);
+        laser_pub_ = this->create_publisher<sensor_msgs::msg::LaserScan>("/sick_lms_291/scan", 1);
 
         // Publicar los datos cada segundo
         timer_ = this->create_wall_timer(std::chrono::duration<double>(1.0 / frequency), std::bind(&SickNode::readAndPublishData, this));

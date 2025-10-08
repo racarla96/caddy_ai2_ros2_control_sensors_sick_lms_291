@@ -41,6 +41,8 @@ PATH: /usr/games
 PATH: /usr/local/games
 PATH: /snap/bin
 PATH: /snap/bin
+PATH: /home/racarla96/.vscode/extensions/ms-python.debugpy-2025.10.0-linux-x64/bundled/scripts/noConfigScripts
+PATH: /home/racarla96/.config/Code/User/globalStorage/github.copilot-chat/debugCommand
 
 
 ## ----------- ##
@@ -1096,15 +1098,15 @@ lt_lt_cv_sys_global_symbol_to_cdecl='"sed -n -e '\''s/^. .* \\(.*\\)\$/extern in
 ## Output variables. ##
 ## ----------------- ##
 
-ACLOCAL='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run aclocal-1.10'
+ACLOCAL='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run aclocal-1.10'
 AMDEPBACKSLASH='\'
 AMDEP_FALSE='#'
 AMDEP_TRUE=''
-AMTAR='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run tar'
+AMTAR='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run tar'
 AR='ar'
-AUTOCONF='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run autoconf'
-AUTOHEADER='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run autoheader'
-AUTOMAKE='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run automake-1.10'
+AUTOCONF='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run autoconf'
+AUTOHEADER='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run autoheader'
+AUTOMAKE='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run automake-1.10'
 AWK='gawk'
 CC='gcc'
 CCDEPMODE='depmode=gcc3'
@@ -1206,7 +1208,7 @@ LIBS=''
 LIBTOOL='$(SHELL) $(top_builddir)/libtool'
 LN_S='ln -s'
 LTLIBOBJS=''
-MAKEINFO='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run makeinfo'
+MAKEINFO='${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run makeinfo'
 OBJEXT='o'
 PACKAGE='sicktoolbox'
 PACKAGE_BUGREPORT='derenick@lehigh.edu'
@@ -1259,7 +1261,7 @@ host_vendor='unknown'
 htmldir='${docdir}'
 includedir='${prefix}/include'
 infodir='${datarootdir}/info'
-install_sh='$(SHELL) /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_control_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/install-sh'
+install_sh='$(SHELL) /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/install-sh'
 libdir='${exec_prefix}/lib'
 libexecdir='${exec_prefix}/libexec'
 localedir='${datarootdir}/locale'

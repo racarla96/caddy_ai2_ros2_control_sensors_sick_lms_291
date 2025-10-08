@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="sick_lms_291_sim">
+
+  <material name="dark">
+    <color rgba="0.3 0.3 0.3 1.0"/>
+  </material>
+
+  <!-- argumentos -->
+  <xacro:arg name="samples" default="180"/>
+  <xacro:arg name="angle_min" default="-1.5708"/> <!-- radianes -->
+  <xacro:arg name="angle_max" default="1.5708"/>
+  <xacro:arg name="frequency" default="10.0"/>
+  <xacro:arg name="range_min" default="0.01"/>
+  <xacro:arg name="range_max" default="80.0"/>
+
+  <!-- Incluir el archivo base del sensor -->
+  <xacro:include filename="$(find caddy_ai2_ros2_sensors_lidar_sick_lms_291)/description/lidar_sick_lms_291.urdf.xacro" />
+
+  <!-- Crear un link base para el mundo -->
+  <link name="world"/>
+
+  <!-- Instanciar el sensor en el mundo -->
+  <xacro:lidar_sick_lms_291 parent="world">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:lidar_sick_lms_291>
+
+  <!-- incluir gazebo -->
+  <xacro:include filename="$(find caddy_ai2_ros2_sensors_lidar_sick_lms_291)/description/lidar_sick_lms_291.gazebo.xacro"/>
+  <xacro:lidar_sick_lms_291_gazebo
+      samples="$(arg samples)"
+      angle_min="$(arg angle_min)"
+      angle_max="$(arg angle_max)"
+      frequency="$(arg frequency)"
+      range_min="$(arg range_min)"
+      range_max="$(arg range_max)" />
+
+</robot>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="sick_lms_291_sim">
+
+  <material name="dark">
+    <color rgba="0.3 0.3 0.3 1.0"/>
+  </material>
+
+  <!-- Incluir el archivo base del sensor -->
+  <xacro:include filename="$(find caddy_ai2_ros2_sensors_lidar_sick_lms_291)/description/lidar_sick_lms_291.urdf.xacro" />
+
+  <!-- Crear un link base para el mundo -->
+  <link name="world"/>
+
+  <!-- Instanciar el sensor en el mundo -->
+  <xacro:lidar_sick_lms_291 parent="world">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:lidar_sick_lms_291>
+
+</robot>

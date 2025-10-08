@@ -1,0 +1,11 @@
+sick_lms_291_parameters:
+  ros__parameters:
+    port: /dev/sick
+    frame_id: ray_link
+    baudrate: 500000 # [9600, 19200, 38400, 500000] - dependiendo de la conexión física (USB/RS232) o (USB/RS422)
+    resolution: 1.0 # [0.25, 0.5, 1.0] degrees
+    angle_max: 90.0 # degrees
+    angle_min: -90.0 # degrees
+    max_range: 80.0 # meters
+    min_range: 0.01 # meters
+    frequency: 75.0 # Hz

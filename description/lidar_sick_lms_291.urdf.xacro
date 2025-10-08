@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="lidar_sick_lms_291" params="parent *origin">
+
+  <joint name="base_joint" type="fixed">
+    <xacro:insert_block name="origin" />
+    <parent link="${parent}"/>
+    <child link="base_link" />
+  </joint>
+
+    <!-- link físico del sensor -->
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <mesh filename="file://$(find caddy_ai2_ros2_sensors_lidar_sick_lms_291)/meshes/SICK_LMS291-S05.dae" scale="1 1 1"/>
+        </geometry>
+      </visual>
+      <!--
+      Colisión simplificada para el sensor
+      <collision>
+        <geometry>
+          <mesh filename="file://$(find caddy_ai2_ros2_sensors_lidar_sick_lms_291)/meshes/SICK_LMS291-S05.stl" scale="1 1 1"/>
+        </geometry>
+      </collision>
+      -->
+      <!-- La colisión con el stl ralentiza en exceso la simulación -->
+      <collision>
+        <geometry>
+          <box size="0.155 0.156 0.208"/>
+        </geometry>
+        <origin xyz="0.000 -0.015 0.075" rpy="0 0 0"/>
+      </collision>
+
+      <inertial>
+        <mass value="4.500"/>
+        <origin xyz="-0.000 -0.022 0.068" rpy="0 0 0"/>
+        <inertia ixx="0.021158" ixy="-0.000001" ixz="-0.000001"
+                iyy="0.021189" iyz="-0.000882" izz="0.015449"/>
+      </inertial>
+    </link>
+
+    <!-- frame del haz del láser -->
+    <link name="ray_link"/>
+
+    <!-- Joint entre el cuerpo y el frame del haz -->
+    <joint name="ray_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="ray_link"/>
+      <origin xyz="0 0 0.1" rpy="0 0 1.5708"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>
