@@ -1,0 +1,11 @@
+sick_lms_291_node:
+  ros__parameters:
+    port: "{{ operation.port }}"            # serial device (udev alias)
+    frame_id: "{{ hardware.frame_id }}"     # TF frame published with each scan
+    baudrate: {{ operation.baudrate }}      # bps
+    resolution: {{ operation.resolution }}  # deg; options: 0.25, 0.5, 1.0
+    angle_min: {{ simulation.angle_min }}   # deg
+    angle_max: {{ simulation.angle_max }}   # deg
+    min_range: {{ simulation.range_min }}   # m
+    max_range: {{ simulation.range_max }}   # m
+    frequency: {{ operation.frequency }}    # Hz

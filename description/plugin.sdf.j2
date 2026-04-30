@@ -1,0 +1,9 @@
+{#
+  Fragment: model-level Gazebo plugins required by the SICK LMS-291.
+  Injectable into a <model> block alongside sensor.sdf.j2.
+  Omit this fragment if the parent model already includes gz-sim-sensors-system.
+#}
+
+  <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+    <render_engine>ogre2</render_engine>
+  </plugin>

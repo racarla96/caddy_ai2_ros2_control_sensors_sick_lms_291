@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+{#
+  Complete SDF model for standalone testing of the SICK LMS-291 sensor.
+  Rendered by sim.launch.py — do NOT use this for robot injection.
+  For injection into a parent robot model, use sensor.sdf.j2 + plugin.sdf.j2.
+
+  The parent_link is set to 'world' so the sensor floats at the given pose.
+  All other variables are the same as those required by sensor.sdf.j2.
+#}
+<sdf version="1.11">
+  <model name="{{ prefix }}lidar_sick_lms_291">
+    {# Standalone: position via <pose>, no joint to an external parent link #}
+    <pose>{{ x }} {{ y }} {{ z }} {{ roll }} {{ pitch }} {{ yaw }}</pose>
+    {% set include_parent_joint = false %}
+    {% include 'sensor.sdf.j2' %}
+    {% if include_plugin | default(true) %}
+    {% include 'plugin.sdf.j2' %}
+    {% endif %}
+  </model>
+</sdf>

@@ -1,0 +1,110 @@
+{#
+  Fragment: injectable into a <model> block in the parent robot SDF.
+  NOT a standalone SDF — no <sdf> or <model> root.
+  For standalone testing use standalone.sdf.j2.
+
+  Required variables (provided by the parent launch or sim.launch.py):
+    prefix            — name prefix for all links/joints (may be '')
+    namespace         — ROS 2 topic namespace (may be '')
+    parent_link       — parent link name inside the model
+    x, y, z           — translation from parent_link (m)
+    roll, pitch, yaw  — rotation from parent_link (rad)
+    frame_id          — TF frame / laser beam origin link name
+    weight            — sensor mass (kg)
+    angle_min, angle_max  — scan angles (deg)
+    range_min, range_max  — sensor range limits (m)
+    frequency         — scan rate (Hz)
+    resolution        — angular resolution (deg)
+    use_gpu           — true → gpu_lidar  /  false → lidar (cpu)
+    mesh_uri          — file:// URI for the DAE mesh
+    noise_enabled     — bool
+    noise_type        — e.g. 'gaussian'
+    noise_mean, noise_stddev, noise_bias_mean, noise_bias_stddev
+#}
+{% set PI = 3.14159265358979 %}
+{% set angle_min_rad = angle_min * PI / 180.0 %}
+{% set angle_max_rad = angle_max * PI / 180.0 %}
+{% set samples = ((angle_max - angle_min) / resolution) | int %}
+
+{% if include_parent_joint | default(true) %}
+  <joint name="{{ prefix }}lidar_joint" type="fixed">
+    <parent>{{ parent_link }}</parent>
+    <child>{{ prefix }}lidar_sick_lms_291_link</child>
+    <pose>{{ x }} {{ y }} {{ z }} {{ roll }} {{ pitch }} {{ yaw }}</pose>
+  </joint>
+{% endif %}
+
+  <link name="{{ prefix }}lidar_sick_lms_291_link">
+    <visual name="{{ prefix }}lidar_visual">
+      <geometry>
+        <mesh>
+          <uri>{{ mesh_uri }}</uri>
+          <scale>1 1 1</scale>
+        </mesh>
+      </geometry>
+    </visual>
+    <collision name="{{ prefix }}lidar_collision">
+      <pose>0.000 -0.015 0.075 0 0 0</pose>
+      <geometry>
+        <box><size>0.155 0.156 0.208</size></box>
+      </geometry>
+    </collision>
+    <inertial>
+      <pose>-0.000 -0.022 0.068 0 0 0</pose>
+      <mass>{{ weight }}</mass>
+      <inertia>
+        <ixx>0.021158</ixx><ixy>-0.000001</ixy><ixz>-0.000001</ixz>
+        <iyy>0.021189</iyy><iyz>-0.000882</iyz><izz>0.015449</izz>
+      </inertia>
+    </inertial>
+  </link>
+
+  <joint name="{{ prefix }}lidar_frame_joint" type="fixed">
+    <parent>{{ prefix }}lidar_sick_lms_291_link</parent>
+    <child>{{ prefix }}{{ frame_id }}</child>
+  </joint>
+
+  <link name="{{ prefix }}{{ frame_id }}">
+    <pose relative_to="{{ prefix }}lidar_sick_lms_291_link">0 0 0.1 0 0 1.5708</pose>
+    <sensor name="{{ prefix }}sick_lms_291" type="{{ 'gpu_lidar' if use_gpu else 'lidar' }}">
+      <gz_frame_id>{{ prefix }}{{ frame_id }}</gz_frame_id>
+{% if namespace %}
+      <topic>/{{ namespace }}/sick_lms_291/scan</topic>
+{% else %}
+      <topic>/sick_lms_291/scan</topic>
+{% endif %}
+      <update_rate>{{ frequency }}</update_rate>
+      <visualize>true</visualize>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>{{ samples }}</samples>
+            <resolution>1</resolution>
+            <min_angle>{{ angle_min_rad }}</min_angle>
+            <max_angle>{{ angle_max_rad }}</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples>
+            <resolution>0.1</resolution>
+            <min_angle>0.0</min_angle>
+            <max_angle>0.0</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>{{ range_min }}</min>
+          <max>{{ range_max }}</max>
+          <resolution>0.01</resolution>
+        </range>
+{% if noise_enabled %}
+        <noise>
+          <type>{{ noise_type }}</type>
+          <mean>{{ noise_mean }}</mean>
+          <stddev>{{ noise_stddev }}</stddev>
+          <bias_mean>{{ noise_bias_mean }}</bias_mean>
+          <bias_stddev>{{ noise_bias_stddev }}</bias_stddev>
+        </noise>
+{% endif %}
+      </lidar>
+      <always_on>true</always_on>
+    </sensor>
+  </link>
