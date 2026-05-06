@@ -1,12 +1,6 @@
 # SICK LMS291-S05 ROS 2 Driver
 
 ## TODOs
-- [x] Fuente de verdad única: `bringup/config/sensor_params.yaml` leído por launch files y plantillas Jinja2.
-- [x] Descripción migrada de xacro a Jinja2 + SDF 1.11 nativo (Gazebo Harmonic).
-- [x] Fragmentos inyectables (`sensor.sdf.j2`, `plugin.sdf.j2`) para integración en simulaciones externas.
-- [x] Soporte de `prefix`, `namespace` y `parent_link` en todos los launch files.
-- [x] Revisar y adecuar la documentación.
-- [ ] Calcular la altura del haz respecto a su base para ajustar el offset de montaje.
 - [ ] Ajustar la masa y el momento de inercia con valores medidos.
 - [ ] Testear con el hardware real y visualizar en RViz2.
 - [ ] Obtener los valores de ruido gaussiano para la simulación → https://sdformat.org/spec?ver=1.11&elem=sensor#sensor_lidar
@@ -15,9 +9,13 @@ NOTA: De momento, no hay soporte para LIDARs en el paquete ROS2 Control.
 
 ---
 
-Este repositorio contiene el código fuente, documentación, CADs y drivers para integrar el sensor **SICK LMS291-S05** en un entorno **ROS 2 Jazzy + Gazebo Harmonic**. El driver está basado en **SickToolbox** y adaptado para versiones modernas de Linux y ROS 2. Los parámetros físicos y operativos se centralizan en `bringup/config/sensor_params.yaml`, del que se generan automáticamente la descripción del robot y los parámetros del nodo mediante **Jinja2**.
+Este repositorio contiene el código fuente, documentación, CADs y drivers para integrar el sensor **SICK LMS291-S05** en un entorno **ROS 2 Jazzy + Gazebo Harmonic**. El driver está basado en **SickToolbox** y adaptado para versiones modernas de Linux y ROS 2.
 
-El paquete está diseñado para ser **inyectable** en la simulación de un robot padre: expone dos fragmentos SDF (`sensor.sdf.j2` y `plugin.sdf.j2`) que el robot padre incluye en su propio modelo mediante `IncludeLaunchDescription`.
+Los parámetros operativos se centralizan en `bringup/config/sensor_params.yaml`. Las constantes físicas del sensor (masa, inercia, frame_id, modelo de ruido) van hardcodeadas en las plantillas SDF. La descripción del robot y los parámetros del nodo se generan automáticamente mediante **Jinja2**.
+
+El paquete está diseñado para ser **inyectable** en el modelo de un robot padre: `sensor.sdf.j2` se incluye dentro del bloque `<model>` del robot padre. Para uso standalone, `world.sdf.j2` genera el mundo Gazebo completo (con sensor horneado) y el modelo para `robot_state_publisher`.
+
+El origen del link `lidar_sick_lms_291_link` está en la **apertura óptica** del sensor. Visual, colisión e inercia tienen un offset de −0.025 m en Z para alinearse con el cuerpo físico.
 
 ---
 
@@ -33,19 +31,15 @@ caddy_ai2_ros2_sensors_sick_lms_291/
 │   └── sick_client.cpp          # Subscriber de prueba
 ├── bringup/
 │   ├── config/
-│   │   ├── sensor_params.yaml        # Fuente de verdad única (hardware + operación + simulación)
+│   │   ├── sensor_params.yaml        # Parámetros operativos (8 claves planas)
 │   │   └── sick_node_params.yaml.j2  # Plantilla Jinja2 → parámetros ROS 2 del nodo
 │   ├── launch/
-│   │   ├── real.launch.py       # Hardware real: sick_node + RSP + RViz2
-│   │   └── sim.launch.py        # Simulación standalone: Gazebo + bridge + RSP + RViz2
+│   │   └── general.launch.py    # Launch unificado: sim + real, con todos los parámetros
 │   └── rviz/
 │       └── lidar_sick_lms_291.rviz
 ├── description/
-│   ├── sensor.sdf.j2            # Fragmento inyectable: joint + links + sensor (gpu/cpu)
-│   ├── plugin.sdf.j2            # Fragmento inyectable <model>: gz-sim-sensors-system
-│   ├── gui_plugin.sdf.j2        # Fragmento inyectable <gui>: VisualizeLidar
-│   ├── standalone.sdf.j2        # Modelo SDF autocontenido (para RSP y spawn externo)
-│   └── standalone_world.sdf.j2  # Mundo Gazebo completo para test autónomo
+│   ├── sensor.sdf.j2            # Fragmento inyectable: link + joint [+ sensor Gazebo]
+│   └── world.sdf.j2             # Mundo Gazebo completo o modelo standalone para RSP
 ├── meshes/
 │   ├── SICK_LMS291-S05.dae
 │   └── SICK_LMS291-S05.stl
@@ -82,35 +76,50 @@ source install/setup.bash
 
 ## Ejecución
 
+El paquete tiene un único launch: `general.launch.py`.
+
+### Simulación (Gazebo con GUI)
+
+```bash
+ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 general.launch.py sim:=true
+
+# Sin RViz2
+ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 general.launch.py sim:=true rviz:=false
+
+# Forzar ruido activo/desactivo
+ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 general.launch.py sim:=true use_noise:=true
+ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 general.launch.py sim:=true use_noise:=false
+
+# Con prefix, namespace y pose de montaje
+ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 general.launch.py \
+    sim:=true prefix:=front_ namespace:=robot1 z:=0.5 use_gpu:=true
+```
+
 ### Hardware real
 
 ```bash
-ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 real.launch.py
-ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 real.launch.py use_rviz:=false
+ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 general.launch.py sim:=false
 
-# Con pose de montaje explícita
-ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 real.launch.py \
-    parent_link:=base_link x:=0.3 z:=0.5 yaw:=0.0
+# Sin RViz2, con pose de montaje explícita
+ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 general.launch.py \
+    sim:=false rviz:=false parent_link:=base_link x:=0.3 z:=0.5
 ```
 
-Publica `/sick_lms_291/scan` (`sensor_msgs/LaserScan`) y difunde las TF del sensor vía `robot_state_publisher`.
+Publica `/{namespace}/sick_lms_291/scan` (`sensor_msgs/LaserScan`) con `frame_id = lidar_sick_lms_291_link`.
 
-### Simulación standalone (Gazebo)
+### Parámetros del launch
 
-```bash
-ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 sim.launch.py
-ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 sim.launch.py gui:=false
-
-# Forzar ruido activo/desactivo independientemente del YAML
-ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 sim.launch.py noise:=true
-ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 sim.launch.py noise:=false
-
-# Con prefix, namespace y pose
-ros2 launch caddy_ai2_ros2_sensors_lidar_sick_lms_291 sim.launch.py \
-    prefix:=front_  namespace:=robot1  z:=0.5  use_gpu:=true
-```
-
-El flag `noise` tiene tres estados: vacío → lee `sensor_params.yaml`; `true`/`false` → sobreescribe el YAML.
+| Parámetro | Default | Descripción |
+|-----------|---------|-------------|
+| `sim` | `true` | `true` → Gazebo + bridge; `false` → hardware real |
+| `rviz` | `true` | Lanza RViz2 |
+| `use_noise` | `''` | Vacío → lee yaml; `true`/`false` → sobreescribe |
+| `use_gpu` | `true` | `gpu_lidar` (true) o `lidar` cpu (false). Solo sim. |
+| `prefix` | `''` | Prefijo de nombres de links y joints |
+| `namespace` | `''` | Namespace ROS 2 del topic de scan |
+| `parent_link` | `map` | Frame padre para el TF del sensor |
+| `x y z` | `0.0` | Traslación (m) |
+| `roll pitch yaw` | `0.0` | Rotación (rad) |
 
 ---
 
@@ -126,99 +135,99 @@ El flag `noise` tiene tres estados: vacío → lee `sensor_params.yaml`; `true`/
 ## Arquitectura
 
 ```
-bringup/config/sensor_params.yaml
+bringup/config/sensor_params.yaml   (8 claves planas)
         │
-        ├─[Jinja2]──► sick_node_params.yaml.j2 ──► sick_node (real)
+        ├─[Jinja2]──► sick_node_params.yaml.j2 ──► sick_node (sim:=false)
         │
-        └─[Jinja2]──► description/standalone.sdf.j2
-                              │
-                              ├── {% include 'sensor.sdf.j2' %}   ← joint + links + sensor
-                              └── {% include 'plugin.sdf.j2' %}   ← gz-sim-sensors-system
+        └─[Jinja2]──► description/world.sdf.j2
+                            │
+                            ├─ model_only=false ──► mundo Gazebo completo (sensor horneado)
+                            └─ model_only=true
+                                  ├─ with_sensor=false ──► robot_description para RSP
+                                  └─ with_sensor=true  ──► modelo standalone con sensor
 
-sim.launch.py:  standalone_world.sdf.j2 ──► Gazebo (mundo completo, sensor embebido)
-                standalone.sdf.j2       ──► robot_state_publisher (TF + RViz)
+general.launch.py (sim:=true):
+  world.sdf.j2 (model_only=false, gui=true)       ──► Gazebo (sensor en mundo)
+  world.sdf.j2 (model_only=true, with_sensor=false) ──► robot_state_publisher (TF)
 
-real.launch.py: standalone.sdf.j2 (include_plugin=False) ──► robot_state_publisher
+general.launch.py (sim:=false):
+  sick_node_params.yaml.j2  ──► sick_node
+  world.sdf.j2 (model_only=true, with_sensor=false) ──► robot_state_publisher (TF)
+```
+
+### TF tree (standalone)
+
+```
+map
+ └─[lidar_joint]─► lidar_sick_lms_291_link   (origen = apertura óptica)
 ```
 
 ---
 
 ## Parámetros — `bringup/config/sensor_params.yaml`
 
-Fichero YAML con tres secciones. Es la **única fuente de verdad**: los launch files lo leen y renderizan las plantillas Jinja2. La pose de montaje (`x, y, z, roll, pitch, yaw`) y el `parent_link` son **siempre externos** — se pasan como argumentos del launch.
-
 ```yaml
-hardware:
-  weight: 4.5               # kg
-  frame_id: "laser_frame"   # TF frame del driver y origen del haz en simulación
-
-operation:
-  port: "/dev/sick"         # Puerto serie (alias udev)
-  baudrate: 500000          # bps; debe coincidir con los jumpers hardware
-  resolution: 1.0           # deg; opciones: 0.25, 0.5, 1.0
-  frequency: 75.0           # Hz; máx 75 en RS-422
-
-simulation:
-  angle_min: -90.0          # deg
-  angle_max:  90.0          # deg
-  range_min:  0.01          # m
-  range_max:  80.0          # m
-  noise:
-    enabled: true           # Sobreescribible con noise:= en el launch
-    type: "gaussian"
-    mean: 0.0               # m
-    stddev: 0.01            # m (típico LiDAR: 0.005–0.02)
-    bias_mean: 0.0
-    bias_stddev: 0.0
+port:       "/dev/sick"   # Puerto serie (alias udev para el adaptador RS-422)
+baudrate:   500000        # bps; debe coincidir con los jumpers hardware
+resolution: 1.0           # deg; opciones: 0.25, 0.5, 1.0
+frequency:  75.0          # Hz; máx 75 en RS-422
+angle_min: -90.0          # deg
+angle_max:  90.0          # deg
+range_min:  0.01          # m
+range_max:  80.0          # m
 ```
 
-### Mensaje `/sick_lms_291/scan`
+### Mensaje de scan
 
 - Tipo: `sensor_msgs/msg/LaserScan`
+- `frame_id = lidar_sick_lms_291_link`
 - `angle_min = -1.5708 rad` / `angle_max = 1.5708 rad`
 - `angle_increment = resolution (rad)`
-- `ranges[]` en metros
 - `scan_time = 1 / frequency`
 
 ---
 
-## Fragmentos SDF — `description/`
+## Plantillas SDF — `description/`
 
-| Fichero | Contenido | Uso |
-|---------|-----------|-----|
-| `sensor.sdf.j2` | `{{ prefix }}lidar_joint` + links + sensor gpu/cpu | Inyectar en `<model>` del robot padre |
-| `plugin.sdf.j2` | `gz-sim-sensors-system` a nivel `<model>` | Inyectar en `<model>` del robot si no lo tiene |
-| `gui_plugin.sdf.j2` | `VisualizeLidar` | Inyectar en `<gui>` del mundo del robot |
-| `standalone.sdf.j2` | Modelo autocontenido (sin plugin de mundo) | `robot_state_publisher` (TF + RViz) |
-| `standalone_world.sdf.j2` | Mundo completo: sensor + sensors-system + GUI | `sim.launch.py` (Gazebo standalone) |
+### `sensor.sdf.j2` — fragmento inyectable en un `<model>`
 
-Variables requeridas por `sensor.sdf.j2`:
+Contiene siempre: link principal (visual, colisión, inercia) + joint.
+El bloque `<sensor>` de Gazebo se incluye condicionalmente con `with_sensor` (por defecto `true`).
+Cuando `parent_link == "map"` se añade un link anchor vacío antes del sensor link para que `sdformat_urdf` pueda resolver el árbol TF en modo standalone.
 
-| Variable | Tipo | Descripción |
-|----------|------|-------------|
-| `prefix` | str | Prefijo de nombres (puede ser `''`) |
-| `namespace` | str | Namespace ROS 2 del topic (puede ser `''`) |
-| `parent_link` | str | Link padre en el modelo |
-| `x, y, z` | float | Traslación desde `parent_link` (m) |
-| `roll, pitch, yaw` | float | Rotación desde `parent_link` (rad) |
-| `frame_id` | str | Nombre del link origen del haz |
-| `weight` | float | Masa del sensor (kg) |
-| `angle_min/max` | float | Ángulos de barrido (deg) |
-| `range_min/max` | float | Límites de rango (m) |
-| `frequency` | float | Tasa de actualización (Hz) |
-| `resolution` | float | Resolución angular (deg) |
-| `use_gpu` | bool | `gpu_lidar` si True, `lidar` (cpu) si False |
-| `mesh_uri` | str | URI `file://` de la malla DAE |
-| `noise_enabled` | bool | Activar ruido gaussiano |
-| `noise_type/mean/stddev/bias_mean/bias_stddev` | — | Parámetros del modelo de ruido |
+| Variable | Descripción |
+|----------|-------------|
+| `prefix` | Prefijo de nombres (puede ser `''`) |
+| `parent_link` | Frame padre (`map` en standalone, link real al inyectar en robot) |
+| `x, y, z` | Traslación desde `parent_link` (m) |
+| `roll, pitch, yaw` | Rotación desde `parent_link` (rad) |
+| `mesh_uri` | URI `file://` de la malla DAE |
+| `include_parent_joint` | `true` (defecto) → crea joint y anchor link; `false` → solo el link del sensor |
+| `with_sensor` | `true` (defecto) → incluye sensor Gazebo; `false` → solo estructura para RSP |
+| `namespace` | Namespace ROS 2 del topic *(solo si with_sensor=true)* |
+| `angle_min/max` | Ángulos de barrido (deg) *(solo si with_sensor=true)* |
+| `range_min/max` | Límites de rango (m) *(solo si with_sensor=true)* |
+| `resolution` | Resolución angular (deg) *(solo si with_sensor=true)* |
+| `frequency` | Tasa de actualización (Hz) *(solo si with_sensor=true)* |
+| `use_gpu` | `gpu_lidar` si True, `lidar` cpu si False *(solo si with_sensor=true)* |
+| `noise_enabled` | Activar ruido gaussiano *(solo si with_sensor=true)* |
 
-`standalone.sdf.j2` admite además `include_plugin` (bool, por defecto `true`) para suprimir el fragmento de plugin cuando no se necesita Gazebo (ej. `real.launch.py`).
+### `world.sdf.j2` — mundo Gazebo o modelo standalone
+
+| Flag | Default | Efecto |
+|------|---------|--------|
+| `model_only` | `false` | `true` → `<sdf><model>` para RSP; `false` → `<sdf><world>` completo con sensor horneado |
+| `gui` | `true` | Incluye bloque `<gui>` con todos los plugins *(solo si model_only=false)* |
+| `with_sensor` | `false` | Incluye bloque sensor Gazebo *(solo si model_only=true)* |
+| `with_plugin` | `false` | Añade `gz-sim-sensors-system` a nivel modelo *(solo si model_only=true)* |
 
 ---
 
-## Integración en la Simulación de un Robot Padre
+## Inyección en la Simulación de un Robot Padre
 
-El robot padre incluye este sensor vía `IncludeLaunchDescription`, pasando `prefix`, `namespace`, `parent_link` y la pose de montaje como argumentos:
+### Opción A — via `IncludeLaunchDescription`
+
+El robot padre incluye este launch completo:
 
 ```python
 from launch.actions import IncludeLaunchDescription
@@ -229,9 +238,11 @@ sick_share = get_package_share_directory('caddy_ai2_ros2_sensors_lidar_sick_lms_
 
 IncludeLaunchDescription(
     PythonLaunchDescriptionSource(
-        os.path.join(sick_share, 'bringup', 'launch', 'sim.launch.py')
+        os.path.join(sick_share, 'bringup', 'launch', 'general.launch.py')
     ),
     launch_arguments={
+        'sim':         'true',
+        'rviz':        'false',
         'prefix':      'front_',
         'namespace':   'robot1',
         'parent_link': 'base_link',
@@ -239,56 +250,109 @@ IncludeLaunchDescription(
         'z':    '0.50',
         'yaw':  '0.0',
         'use_gpu': 'true',
-        'gui':  'false',
     }.items(),
 )
 ```
 
-Para inyectar solo los fragmentos SDF en el modelo del robot (sin lanzar Gazebo desde aquí), el robot padre lee y renderiza los fragmentos directamente:
+### Opción B — inyección del fragmento SDF en el modelo del robot padre
+
+El paquete expone el helper `sick_lms_291_description.py` en `bringup/launch/`
+con la función `get_sensor_sdf()` que devuelve el fragmento SDF renderizado listo
+para insertar dentro del `<model>` del robot padre.
+
+#### 1. Declarar la dependencia en `package.xml` del robot padre
+
+```xml
+<exec_depend>caddy_ai2_ros2_sensors_lidar_sick_lms_291</exec_depend>
+```
+
+#### 2. Importar y llamar desde el launch del robot padre
+
+El `sys.path.insert` debe hacerse **dentro** de `_launch()` / `OpaqueFunction`,
+no a nivel de módulo, para que `get_package_share_directory` se ejecute cuando
+el entorno ROS ya está inicializado.
 
 ```python
-import yaml
-from jinja2 import Environment, FileSystemLoader
+import sys
+import os
 from ament_index_python.packages import get_package_share_directory
+from launch.actions import OpaqueFunction
 
-sick_share = get_package_share_directory('caddy_ai2_ros2_sensors_lidar_sick_lms_291')
+def _launch(context, *args, **kwargs):
+    sick_share = get_package_share_directory('caddy_ai2_ros2_sensors_lidar_sick_lms_291')
+    sys.path.insert(0, os.path.join(sick_share, 'bringup', 'launch'))
+    from sick_lms_291_description import get_sensor_sdf
 
-with open(os.path.join(sick_share, 'bringup', 'config', 'sensor_params.yaml')) as f:
-    sensor = yaml.safe_load(f)
+    sensor_fragment = get_sensor_sdf(
+        prefix='front_',
+        parent_link='base_link',   # link real del robot padre (ya existe en el modelo)
+        x=0.30, y=0.0, z=0.50,
+        roll=0.0, pitch=0.0, yaw=0.0,
+        with_sensor=True,
+        namespace='robot1',
+        use_gpu=True,
+        # noise_enabled=None → lee sensor_params.yaml automáticamente
+    )
 
-env = Environment(loader=FileSystemLoader(os.path.join(sick_share, 'description')))
+    # Insertar el fragmento en el template SDF del robot padre
+    robot_sdf = robot_env.get_template('robot.sdf.j2').render(
+        sick_sensor=sensor_fragment,
+        ...
+    )
+```
 
-sensor_fragment = env.get_template('sensor.sdf.j2').render(
-    prefix='front_',
-    namespace='robot1',
-    parent_link='base_link',
-    x=0.30, y=0.0, z=0.50,
-    roll=0.0, pitch=0.0, yaw=0.0,
-    frame_id=sensor['hardware']['frame_id'],
-    weight=sensor['hardware']['weight'],
-    angle_min=sensor['simulation']['angle_min'],
-    angle_max=sensor['simulation']['angle_max'],
-    range_min=sensor['simulation']['range_min'],
-    range_max=sensor['simulation']['range_max'],
-    frequency=sensor['operation']['frequency'],
-    resolution=sensor['operation']['resolution'],
-    use_gpu=True,
-    mesh_uri=f'file://{os.path.join(sick_share, "meshes")}/SICK_LMS291-S05.dae',
-    noise_enabled=sensor['simulation']['noise']['enabled'],
-    noise_type=sensor['simulation']['noise']['type'],
-    noise_mean=sensor['simulation']['noise']['mean'],
-    noise_stddev=sensor['simulation']['noise']['stddev'],
-    noise_bias_mean=sensor['simulation']['noise']['bias_mean'],
-    noise_bias_stddev=sensor['simulation']['noise']['bias_stddev'],
+#### 3. Insertar el fragmento en el template SDF del robot padre
+
+```xml
+{# robot.sdf.j2 #}
+<model name="my_robot">
+  <link name="base_link">
+    ...
+  </link>
+
+  {{ sick_sensor }}
+</model>
+```
+
+**Puntos clave de la inyección:**
+- `parent_link='base_link'` — el link padre ya existe en el modelo del robot; NO se crea un link anchor vacío (el anchor `map` solo se añade cuando `parent_link == "map"`)
+- `include_parent_joint=True` (defecto) — el fragmento crea el joint `base_link → front_lidar_sick_lms_291_link`
+- El robot padre NO debe crear ese joint por su cuenta
+- El `frame_id` del scan es `front_lidar_sick_lms_291_link` (con prefix)
+- `noise_enabled=None` (defecto) lee el valor de `sensor_params.yaml`
+
+#### Arrancar el nodo del driver desde el launch del robot padre (hardware real)
+
+Cuando el robot padre ya lanza su propio RSP y Gazebo, se puede incluir solo el
+nodo driver del sensor usando `sim:=false rsp:=false`:
+
+```python
+IncludeLaunchDescription(
+    PythonLaunchDescriptionSource(
+        os.path.join(sick_share, 'bringup', 'launch', 'general.launch.py')
+    ),
+    launch_arguments={
+        'sim':        'false',
+        'rviz':       'false',
+        'rsp':        'false',   # RSP ya lo lanza el sistema padre
+        'namespace':  'robot1',
+        'parent_link': 'base_link',
+        'x':  '0.30',
+        'z':  '0.50',
+    }.items(),
 )
 ```
+
+Esto lanza únicamente el `sick_node` con los parámetros de `sensor_params.yaml`.
+El TF lo publica el RSP del robot padre, que debe incluir el fragmento del sensor
+en su robot description (Opción B, paso 3).
 
 ### Topic bridge en el robot padre
 
 ```yaml
 # gz_msg_bridge.yaml.j2 del paquete host
 - ros_topic_name: "{{ ns }}sick_lms_291/scan"
-  gz_topic_name:  "{{ ns }}sick_lms_291/scan"
+  gz_topic_name:  "/{{ ns }}sick_lms_291/scan"
   ros_type_name:  "sensor_msgs/msg/LaserScan"
   gz_type_name:   "gz.msgs.LaserScan"
   direction:      GZ_TO_ROS
@@ -296,13 +360,17 @@ sensor_fragment = env.get_template('sensor.sdf.j2').render(
 
 ### Nota sobre el mesh URI
 
-El patrón `package://` no funciona cuando Gazebo carga el SDF directamente. Gazebo solo resuelve `package://` cuando recibe el modelo a través del topic `/robot_description`. Para garantizar que el mesh se carga en ambos modos, el URI se inyecta como ruta absoluta `file://` desde Python antes de que el SDF llegue a Gazebo.
+El patrón `package://` no funciona cuando Gazebo carga el SDF directamente. Usar siempre ruta absoluta `file://` construida en Python:
+
+```python
+mesh_uri = f'file://{os.path.join(sick_share, "meshes")}/SICK_LMS291-S05.dae'
+```
 
 ---
 
 ## Dependencias
 
-- **ROS 2 Jazzy:** `rclcpp`, `sensor_msgs`, `geometry_msgs`, `visualization_msgs`, `tf2_ros`, `ros_gz_sim`, `ros_gz_bridge`, `robot_state_publisher`
+- **ROS 2 Jazzy:** `rclcpp`, `sensor_msgs`, `geometry_msgs`, `tf2_ros`, `ros_gz_sim`, `ros_gz_bridge`, `robot_state_publisher`
 - **Python (launch):** `jinja2`, `pyyaml`
 - **Sistema:** `sicktoolbox-1.0.1-patch`, compilador C++14+
 - **Construcción:** `ament_cmake`

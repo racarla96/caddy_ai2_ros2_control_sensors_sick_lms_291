@@ -107,13 +107,13 @@ DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run aclocal-1.10
-AMTAR = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run tar
+ACLOCAL = ${SHELL} /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run aclocal-1.10
+AMTAR = ${SHELL} /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run tar
 AR = ar
-AUTOCONF = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run automake-1.10
-AWK = gawk
+AUTOCONF = ${SHELL} /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run automake-1.10
+AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
@@ -122,32 +122,32 @@ CPPFLAGS =
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O2
+CXXFLAGS = -g -O2 -std=c++11 -w
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DOXYGEN_PAPER_SIZE = 
 DX_CONFIG = doxygen.cfg
 DX_DOCDIR = doxygen-doc
-DX_DOT = 
-DX_DOXYGEN = 
+DX_DOT = /usr/bin/dot
+DX_DOXYGEN = /usr/bin/doxygen
 DX_DVIPS = 
-DX_EGREP = 
-DX_ENV =  SRCDIR='.' PROJECT='sicktoolbox' DOCDIR='doxygen-doc' VERSION='1.0.1' HAVE_DOT='NO' GENERATE_MAN='NO' GENERATE_RTF='NO' GENERATE_XML='NO' GENERATE_HTMLHELP='NO' GENERATE_CHI='NO' GENERATE_HTML='NO' GENERATE_LATEX='NO'
+DX_EGREP = /usr/bin/egrep
+DX_ENV =  SRCDIR='.' PROJECT='sicktoolbox' DOCDIR='doxygen-doc' VERSION='1.0.1' PERL_PATH='/usr/bin/perl' HAVE_DOT='YES' DOT_PATH='/usr/bin' GENERATE_MAN='YES' GENERATE_RTF='NO' GENERATE_XML='NO' GENERATE_HTMLHELP='NO' GENERATE_CHI='NO' GENERATE_HTML='YES' GENERATE_LATEX='YES'
 DX_FLAG_chi = 0
 DX_FLAG_chm = 0
-DX_FLAG_doc = 0
-DX_FLAG_dot = 0
-DX_FLAG_html = 0
-DX_FLAG_man = 0
-DX_FLAG_pdf = 0
+DX_FLAG_doc = 1
+DX_FLAG_dot = 1
+DX_FLAG_html = 1
+DX_FLAG_man = 1
+DX_FLAG_pdf = 1
 DX_FLAG_ps = 0
 DX_FLAG_rtf = 0
 DX_FLAG_xml = 0
 DX_HHC = 
 DX_LATEX = 
-DX_MAKEINDEX = 
-DX_PDFLATEX = 
+DX_MAKEINDEX = /usr/bin/makeindex
+DX_PDFLATEX = /usr/bin/pdflatex
 DX_PERL = /usr/bin/perl
 DX_PROJECT = sicktoolbox
 ECHO = echo
@@ -170,7 +170,7 @@ LIBS =
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/missing --run makeinfo
 MKDIR_P = /usr/bin/mkdir -p
 OBJEXT = o
 PACKAGE = sicktoolbox
@@ -190,10 +190,10 @@ SICK_LD_SRC_DIR = sickld-1.0
 SICK_LMS_SRC_DIR = sicklms-1.0
 STRIP = strip
 VERSION = 1.0.1
-abs_builddir = /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch
-abs_srcdir = /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch
-abs_top_builddir = /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch
-abs_top_srcdir = /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch
+abs_builddir = /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch
+abs_srcdir = /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch
+abs_top_builddir = /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch
+abs_top_srcdir = /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch
 ac_ct_CC = gcc
 ac_ct_CXX = g++
 ac_ct_F77 = f77
@@ -224,7 +224,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = $(SHELL) /home/racarla96/ws_dev_ros2/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/install-sh
+install_sh = $(SHELL) /home/racarla96/ws_ros2_caddy_dev/src/caddy_ai2_ros2_sensors_sick_lms_291/doc/code/sicktoolbox-1.0.1-patch/misc/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -244,29 +244,29 @@ target_alias =
 top_builddir = .
 top_srcdir = .
 SUBDIRS = c++
-##DX_CLEAN_HTML = doxygen-doc/html
-##DX_CLEAN_CHM = doxygen-doc/chm
-###DX_CLEAN_CHI = doxygen-doc/sicktoolbox.chi
-##DX_CLEAN_MAN = doxygen-doc/man
-##DX_CLEAN_RTF = doxygen-doc/rtf
-##DX_CLEAN_XML = doxygen-doc/xml
-##DX_CLEAN_PS = doxygen-doc/sicktoolbox.ps
-##DX_PS_GOAL = doxygen-ps
-##DX_CLEAN_PDF = doxygen-doc/sicktoolbox.pdf
-##DX_PDF_GOAL = doxygen-pdf
-##DX_CLEAN_LATEX = doxygen-doc/latex
-#DX_CLEANFILES = \
-#    doxygen-doc/sicktoolbox.tag \
-#    -r \
-#    $(DX_CLEAN_HTML) \
-#    $(DX_CLEAN_CHM) \
-#    $(DX_CLEAN_CHI) \
-#    $(DX_CLEAN_MAN) \
-#    $(DX_CLEAN_RTF) \
-#    $(DX_CLEAN_XML) \
-#    $(DX_CLEAN_PS) \
-#    $(DX_CLEAN_PDF) \
-#    $(DX_CLEAN_LATEX)
+DX_CLEAN_HTML = doxygen-doc/html
+#DX_CLEAN_CHM = doxygen-doc/chm
+##DX_CLEAN_CHI = doxygen-doc/sicktoolbox.chi
+DX_CLEAN_MAN = doxygen-doc/man
+#DX_CLEAN_RTF = doxygen-doc/rtf
+#DX_CLEAN_XML = doxygen-doc/xml
+#DX_CLEAN_PS = doxygen-doc/sicktoolbox.ps
+#DX_PS_GOAL = doxygen-ps
+DX_CLEAN_PDF = doxygen-doc/sicktoolbox.pdf
+DX_PDF_GOAL = doxygen-pdf
+DX_CLEAN_LATEX = doxygen-doc/latex
+DX_CLEANFILES = \
+    doxygen-doc/sicktoolbox.tag \
+    -r \
+    $(DX_CLEAN_HTML) \
+    $(DX_CLEAN_CHM) \
+    $(DX_CLEAN_CHI) \
+    $(DX_CLEAN_MAN) \
+    $(DX_CLEAN_RTF) \
+    $(DX_CLEAN_XML) \
+    $(DX_CLEAN_PS) \
+    $(DX_CLEAN_PDF) \
+    $(DX_CLEAN_LATEX)
 
 MOSTLYCLEANFILES = $(DX_CLEANFILES)
 EXTRA_DIST = matlab/config_mex \
@@ -733,51 +733,51 @@ uninstall-am:
 	tags tags-recursive uninstall uninstall-am
 
 
-##doxygen-ps: doxygen-doc/sicktoolbox.ps
+#doxygen-ps: doxygen-doc/sicktoolbox.ps
 
-##doxygen-doc/sicktoolbox.ps: doxygen-doc/sicktoolbox.tag
-##	cd doxygen-doc/latex; \
-##	rm -f *.aux *.toc *.idx *.ind *.ilg *.log *.out; \
-##	$(DX_LATEX) refman.tex; \
-##	$(MAKEINDEX_PATH) refman.idx; \
-##	$(DX_LATEX) refman.tex; \
-##	countdown=5; \
-##	while $(DX_EGREP) 'Rerun (LaTeX|to get cross-references right)' \
-##	                  refman.log > /dev/null 2>&1 \
-##	   && test $$countdown -gt 0; do \
-##	    $(DX_LATEX) refman.tex; \
-##	    countdown=`expr $$countdown - 1`; \
-##	done; \
-##	$(DX_DVIPS) -o ../sicktoolbox.ps refman.dvi
+#doxygen-doc/sicktoolbox.ps: doxygen-doc/sicktoolbox.tag
+#	cd doxygen-doc/latex; \
+#	rm -f *.aux *.toc *.idx *.ind *.ilg *.log *.out; \
+#	$(DX_LATEX) refman.tex; \
+#	$(MAKEINDEX_PATH) refman.idx; \
+#	$(DX_LATEX) refman.tex; \
+#	countdown=5; \
+#	while $(DX_EGREP) 'Rerun (LaTeX|to get cross-references right)' \
+#	                  refman.log > /dev/null 2>&1 \
+#	   && test $$countdown -gt 0; do \
+#	    $(DX_LATEX) refman.tex; \
+#	    countdown=`expr $$countdown - 1`; \
+#	done; \
+#	$(DX_DVIPS) -o ../sicktoolbox.ps refman.dvi
 
-##doxygen-pdf: doxygen-doc/sicktoolbox.pdf
+doxygen-pdf: doxygen-doc/sicktoolbox.pdf
 
-##doxygen-doc/sicktoolbox.pdf: doxygen-doc/sicktoolbox.tag
-##	cd doxygen-doc/latex; \
-##	rm -f *.aux *.toc *.idx *.ind *.ilg *.log *.out; \
-##	$(DX_PDFLATEX) refman.tex; \
-##	$(DX_MAKEINDEX) refman.idx; \
-##	$(DX_PDFLATEX) refman.tex; \
-##	countdown=5; \
-##	while $(DX_EGREP) 'Rerun (LaTeX|to get cross-references right)' \
-##	                  refman.log > /dev/null 2>&1 \
-##	   && test $$countdown -gt 0; do \
-##	    $(DX_PDFLATEX) refman.tex; \
-##	    countdown=`expr $$countdown - 1`; \
-##	done; \
-##	mv refman.pdf ../sicktoolbox.pdf
+doxygen-doc/sicktoolbox.pdf: doxygen-doc/sicktoolbox.tag
+	cd doxygen-doc/latex; \
+	rm -f *.aux *.toc *.idx *.ind *.ilg *.log *.out; \
+	$(DX_PDFLATEX) refman.tex; \
+	$(DX_MAKEINDEX) refman.idx; \
+	$(DX_PDFLATEX) refman.tex; \
+	countdown=5; \
+	while $(DX_EGREP) 'Rerun (LaTeX|to get cross-references right)' \
+	                  refman.log > /dev/null 2>&1 \
+	   && test $$countdown -gt 0; do \
+	    $(DX_PDFLATEX) refman.tex; \
+	    countdown=`expr $$countdown - 1`; \
+	done; \
+	mv refman.pdf ../sicktoolbox.pdf
 
-#.PHONY: doxygen-run doxygen-doc $(DX_PS_GOAL) $(DX_PDF_GOAL)
+.PHONY: doxygen-run doxygen-doc $(DX_PS_GOAL) $(DX_PDF_GOAL)
 
-#.INTERMEDIATE: doxygen-run $(DX_PS_GOAL) $(DX_PDF_GOAL)
+.INTERMEDIATE: doxygen-run $(DX_PS_GOAL) $(DX_PDF_GOAL)
 
-#doxygen-run: doxygen-doc/sicktoolbox.tag
+doxygen-run: doxygen-doc/sicktoolbox.tag
 
-#doxygen-doc: doxygen-run $(DX_PS_GOAL) $(DX_PDF_GOAL)
+doxygen-doc: doxygen-run $(DX_PS_GOAL) $(DX_PDF_GOAL)
 
-#doxygen-doc/sicktoolbox.tag: $(DX_CONFIG) $(pkginclude_HEADERS)
-#	rm -rf doxygen-doc
-#	$(DX_ENV) $(DX_DOXYGEN) $(srcdir)/$(DX_CONFIG)
+doxygen-doc/sicktoolbox.tag: $(DX_CONFIG) $(pkginclude_HEADERS)
+	rm -rf doxygen-doc
+	$(DX_ENV) $(DX_DOXYGEN) $(srcdir)/$(DX_CONFIG)
 
 ld-all: ld-lib ld-examples
 

@@ -1,43 +1,11 @@
-# Physical and configuration parameters of the SICK LMS291-S05 LiDAR sensor.
-# Single source of truth: read by launch files and Jinja2 templates.
-#
-# NOTE: mounting pose (x, y, z, roll, pitch, yaw) and parent_link are NOT here.
-# They are provided externally by the integrating robot or by sim.launch.py arguments.
-#
-# Sections:
-#   hardware    — physical body properties (datasheet, immutable)
-#   operation   — runtime settings for the real hardware node
-#   simulation  — Gazebo sensor geometry, range limits, and noise model
+# Runtime parameters for the SICK LMS291-S05 LiDAR sensor.
+# Physical constants (weight, mesh, frame_id, inertia, noise) are hardcoded in sensor.sdf.j2.
 
-# ---------------------------------------------------------------------------
-# Hardware — physical body properties
-# ---------------------------------------------------------------------------
-hardware:
-  weight: 4.5               # Sensor mass (kg)
-  frame_id: "laser_frame"   # TF frame published by the driver and used in simulation
-
-# ---------------------------------------------------------------------------
-# Operation — runtime configuration for the real hardware node (RS-422)
-# ---------------------------------------------------------------------------
-operation:
-  port: "/dev/sick"         # Serial port (udev alias for the RS-422 adapter)
-  baudrate: 500000          # Active baudrate (bps); must match hardware jumpers
-  resolution: 1.0           # Active angular resolution (deg); options: 0.25, 0.5, 1.0
-  frequency: 75.0           # Active scan frequency (Hz); max 75 on RS-422
-
-# ---------------------------------------------------------------------------
-# Simulation — Gazebo sensor geometry, range limits and noise model
-# ---------------------------------------------------------------------------
-simulation:
-  angle_min: -90.0          # Scan start angle (deg)
-  angle_max:  90.0          # Scan end angle   (deg)
-  range_min:  0.01          # Minimum measurable range (m)
-  range_max:  80.0          # Maximum measurable range (m)
-
-  noise:
-    enabled: true           # Toggle Gaussian range noise; overridable with noise:= launch arg
-    type: "gaussian"        # Noise type: 'none' | 'gaussian' | 'gaussian_quantized'
-    mean: 0.0               # Mean of the Gaussian distribution (m)
-    stddev: 0.01            # Standard deviation (m); typical LiDAR: 0.005–0.02
-    bias_mean: 0.0          # Systematic bias mean (m)
-    bias_stddev: 0.0        # Systematic bias standard deviation (m)
+port:        "/dev/sick"   # Serial port (udev alias for the RS-422 adapter)
+baudrate:    500000        # Active baudrate (bps); must match hardware jumpers
+resolution:  1.0           # Active angular resolution (deg); options: 0.25, 0.5, 1.0
+frequency:   75.0          # Active scan frequency (Hz); max 75 on RS-422
+angle_min:  -90.0          # Scan start angle (deg)
+angle_max:   90.0          # Scan end angle   (deg)
+range_min:   0.1          # Minimum measurable range (m)
+range_max:  80.0           # Maximum measurable range (m)
