@@ -30,8 +30,10 @@ def get_sensor_sdf(
     with open(os.path.join(pkg_share, 'bringup', 'config', 'sensor_params.yaml')) as f:
         params = yaml.safe_load(f)
 
+    si = params['simulation']
+    op = params['operation']
     if noise_enabled is None:
-        noise_enabled = params.get('noise_enabled', True)
+        noise_enabled = si['noise']['enabled']
 
     env = Environment(
         loader=FileSystemLoader(os.path.join(pkg_share, 'description')),
@@ -47,12 +49,12 @@ def get_sensor_sdf(
         include_parent_joint=include_parent_joint,
         with_sensor=with_sensor,
         namespace=namespace,
-        angle_min=params['angle_min'],
-        angle_max=params['angle_max'],
-        range_min=params['range_min'],
-        range_max=params['range_max'],
-        resolution=params['resolution'],
-        frequency=params['frequency'],
+        angle_min=si['angle_min'],
+        angle_max=si['angle_max'],
+        range_min=si['range_min'],
+        range_max=si['range_max'],
+        resolution=op['resolution'],
+        frequency=op['frequency'],
         use_gpu=use_gpu,
         noise_enabled=noise_enabled,
     )

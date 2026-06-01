@@ -1,11 +1,30 @@
 # Runtime parameters for the SICK LMS291-S05 LiDAR sensor.
-# Physical constants (weight, mesh, frame_id, inertia, noise) are hardcoded in sensor.sdf.j2.
+# Physical constants (mass, inertia, dimensions) are hardcoded in sensor.sdf.j2.
 
-port:        "/dev/sick"   # Serial port (udev alias for the RS-422 adapter)
-baudrate:    500000        # Active baudrate (bps); must match hardware jumpers
-resolution:  1.0           # Active angular resolution (deg); options: 0.25, 0.5, 1.0
-frequency:   75.0          # Active scan frequency (Hz); max 75 on RS-422
-angle_min:  -90.0          # Scan start angle (deg)
-angle_max:   90.0          # Scan end angle   (deg)
-range_min:   0.1          # Minimum measurable range (m)
-range_max:  80.0           # Maximum measurable range (m)
+hardware:
+  frame_id: lidar_sick_lms_291_link
+  weight: 4.5
+  mesh: SICK_LMS291-S05.dae
+
+operation:
+  port: "/dev/sick"
+  baudrate: 500000
+  resolution: 1.0        # Active angular resolution (deg); options: 0.25, 0.5, 1.0
+  frequency: 75.0        # Active scan frequency (Hz); max 75 on RS-422
+  angle_min: -90.0       # Scan start angle (deg)
+  angle_max:  90.0       # Scan end angle   (deg)
+  range_min: 0.1         # Minimum measurable range (m)
+  range_max: 80.0        # Maximum measurable range (m)
+
+simulation:
+  angle_min: -90.0
+  angle_max:  90.0
+  range_min: 0.1
+  range_max: 80.0
+  noise:
+    enabled: true
+    type: gaussian
+    mean: 0.0
+    stddev: 0.01
+    bias_mean: 0.0
+    bias_stddev: 0.0

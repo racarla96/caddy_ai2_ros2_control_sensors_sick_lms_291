@@ -52,7 +52,7 @@ install(TARGETS
   sick_node sick_client
   DESTINATION lib/${PROJECT_NAME})
 
-install(DIRECTORY bringup description meshes
+install(DIRECTORY bringup description
   DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)

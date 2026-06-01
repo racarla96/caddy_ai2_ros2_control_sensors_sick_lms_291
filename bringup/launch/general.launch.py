@@ -64,7 +64,9 @@ def _launch(context, *args, **kwargs):
     with open(os.path.join(pkg_share, 'bringup', 'config', 'sensor_params.yaml')) as f:
         params = yaml.safe_load(f)
 
-    noise_enabled = params.get('noise_enabled', True) if noise_arg == '' \
+    si = params['simulation']
+    op = params['operation']
+    noise_enabled = si['noise']['enabled'] if noise_arg == '' \
                     else noise_arg.lower() == 'true'
 
     desc_env = Environment(
@@ -80,9 +82,9 @@ def _launch(context, *args, **kwargs):
     sensor = dict(
         **base,
         namespace=namespace,
-        angle_min=params['angle_min'], angle_max=params['angle_max'],
-        range_min=params['range_min'], range_max=params['range_max'],
-        resolution=params['resolution'], frequency=params['frequency'],
+        angle_min=si['angle_min'], angle_max=si['angle_max'],
+        range_min=si['range_min'], range_max=si['range_max'],
+        resolution=op['resolution'], frequency=op['frequency'],
         use_gpu=use_gpu, noise_enabled=noise_enabled,
     )
 
@@ -132,7 +134,7 @@ def _launch(context, *args, **kwargs):
             loader=FileSystemLoader(os.path.join(pkg_share, 'bringup', 'config')),
             keep_trailing_newline=True,
         )
-        node_params_str = cfg_env.get_template('sick_node_params.yaml.j2').render(**params)
+        node_params_str = cfg_env.get_template('sick_node_params.yaml.j2').render(**op)
         tmp_cfg = tempfile.NamedTemporaryFile(
             mode='w', suffix='.yaml', prefix='sick_params_', delete=False
         )

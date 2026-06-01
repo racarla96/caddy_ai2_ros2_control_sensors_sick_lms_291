@@ -1,0 +1,86 @@
+{#-
+  URDF fragment: link + visual + joint for SICK LMS291-S05.
+  When gazebo=true, also injects the Gazebo sensor plugin.
+
+  Variables always required:
+    prefix, sensor_name, frame_id,
+    x, y, z, roll, pitch, yaw  (pose relative to base_footprint),
+    sensor_share               (absolute path to this package's share dir)
+
+  Additional variables required only when gazebo=true:
+    namespace, angle_min, angle_max, range_min, range_max,
+    frequency, resolution, use_gpu,
+    noise_enabled, noise_mean, noise_stddev
+#}
+
+  <link name="{{ prefix }}{{ frame_id }}">
+    <inertial>
+      <!-- body ~155×156×208 mm, 4.5 kg; CoM 97 mm from base = 43 mm above scan aperture -->
+      <origin xyz="0.0 -0.022 0.043" rpy="0 0 0"/>
+      <mass value="4.5"/>
+      <inertia ixx="0.025350" ixy="0" ixz="0"
+               iyy="0.025233" iyz="0"
+               izz="0.018135"/>
+    </inertial>
+    <visual>
+      <!-- mesh origin at body bottom; laser aperture is 54 mm above → offset -25 mm from aperture center -->
+      <origin xyz="0.0 0.0 -0.025" rpy="0.0 0.0 -1.5708"/>
+      <geometry>
+        <mesh filename="file://{{ sensor_share }}/description/SICK_LMS291-S05.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="{{ prefix }}{{ sensor_name }}_joint" type="fixed">
+    <parent link="{{ prefix }}base_footprint"/>
+    <child link="{{ prefix }}{{ frame_id }}"/>
+    <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ roll }} {{ pitch }} {{ yaw }}"/>
+  </joint>
+
+  <gazebo reference="{{ prefix }}{{ sensor_name }}_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+{%- if gazebo | default(false) %}
+{%- set PI = 3.14159265358979 %}
+{%- set angle_min_rad = angle_min * PI / 180.0 %}
+{%- set angle_max_rad = angle_max * PI / 180.0 %}
+{%- set samples = ((angle_max - angle_min) / resolution) | int %}
+
+  <gazebo reference="{{ prefix }}{{ frame_id }}">
+    <sensor name="{{ prefix }}sick_lms_291" type="{{ 'gpu_lidar' if use_gpu else 'lidar' }}">
+      <topic>{{ ('/' + namespace + '/') if namespace else '/' }}sick_lms_291/scan</topic>
+      <update_rate>{{ frequency }}</update_rate>
+      <visualize>true</visualize>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>{{ samples }}</samples>
+            <resolution>1</resolution>
+            <min_angle>{{ angle_min_rad }}</min_angle>
+            <max_angle>{{ angle_max_rad }}</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples>
+            <resolution>0.1</resolution>
+            <min_angle>0.0</min_angle>
+            <max_angle>0.0</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>{{ range_min }}</min>
+          <max>{{ range_max }}</max>
+          <resolution>0.01</resolution>
+        </range>
+{%- if noise_enabled %}
+        <noise>
+          <type>gaussian</type>
+          <mean>{{ noise_mean | default(0.0) }}</mean>
+          <stddev>{{ noise_stddev | default(0.01) }}</stddev>
+        </noise>
+{%- endif %}
+      </lidar>
+      <always_on>true</always_on>
+    </sensor>
+  </gazebo>
+{%- endif %}
