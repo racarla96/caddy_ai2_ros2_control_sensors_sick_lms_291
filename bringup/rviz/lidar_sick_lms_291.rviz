@@ -103,7 +103,7 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        lidar_sick_lms_291_link:
+        lidar_2d_sick_lms_291_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -119,7 +119,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: lidar_sick_lms_291_link
+    Fixed Frame: lidar_2d_sick_lms_291_link
     Frame Rate: 30
   Name: root
   Tools:

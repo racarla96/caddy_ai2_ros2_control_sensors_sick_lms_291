@@ -2,7 +2,7 @@
 # Physical constants (mass, inertia, dimensions) are hardcoded in sensor.sdf.j2.
 
 hardware:
-  frame_id: lidar_sick_lms_291_link
+  frame_id: lidar_2d_sick_lms_291_link
   weight: 4.5
   mesh: SICK_LMS291-S05.dae
 
